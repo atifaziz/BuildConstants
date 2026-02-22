@@ -51,8 +51,8 @@ public class GenerateBuildConstantsTask : Task
 
     /// <summary>
     /// The namespace for the generated class (typically <c>$(RootNamespace)</c>).
+    /// When empty, the generated class is placed in the global namespace.
     /// </summary>
-    [Required]
     public string Namespace { get; set; } = "";
 
     /// <summary>

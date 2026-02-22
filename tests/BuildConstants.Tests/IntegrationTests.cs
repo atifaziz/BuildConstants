@@ -297,6 +297,41 @@ public class IntegrationTests
     }
 
     [Fact]
+    public async Task EmptyNamespace_GeneratesGlobalClass()
+    {
+        var csproj = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <RootNamespace></RootNamespace>
+                <EnableDefaultConstantItems>false</EnableDefaultConstantItems>
+              </PropertyGroup>
+              <ItemGroup>
+                <Constant Include="AppName" Value="NoNs" />
+              </ItemGroup>
+            </Project>
+            """;
+
+        var result = await ScenarioRunner.BuildAsync(csproj,
+            files: new() { ["Program.cs"] = """
+                static class Program
+                {
+                    static void Main()
+                    {
+                        System.Console.WriteLine(BuildConstants.AppName);
+                    }
+                }
+                """ });
+
+        Assert.True(result.Succeeded, result.Output);
+        var generated = result.ReadGeneratedFile();
+
+        Assert.DoesNotContain("namespace", generated);
+        Assert.Contains("partial class BuildConstants", generated);
+        Assert.Contains("""public const string AppName = @"NoNs";""", generated);
+    }
+
+    [Fact]
     public async Task VerbatimStringEscaping()
     {
         var csproj = MinimalCsprojWith("""
