@@ -21,9 +21,39 @@
   <UsingTask TaskName="BuildConstants.GenerateBuildConstantsTask"
              AssemblyFile="$(_BuildConstantsTaskAssembly)" />
 
+  <!--
+    Auto-populate Constant items from well-known MSBuild properties.
+    These are appended after any user-defined Constant items.
+    To exclude a specific default constant, add a target that runs
+    AfterTargets="PopulateBuildConstants" and removes the unwanted items:
+
+      <Target Name="_ExcludeBuildConstants" AfterTargets="PopulateBuildConstants">
+        <ItemGroup>
+          <Constant Remove="Configuration" />
+        </ItemGroup>
+      </Target>
+  -->
+
+  <Target Name="PopulateBuildConstants"
+          BeforeTargets="GenerateBuildConstants"
+          Condition="'$(EnableDefaultConstantItems)' != 'false'">
+    <ItemGroup>
+      <Constant Include="AssemblyName"         Value="$(AssemblyName)"         Condition="'$(AssemblyName)' != ''" />
+      <Constant Include="AssemblyVersion"      Value="$(AssemblyVersion)"      Condition="'$(AssemblyVersion)' != ''" />
+      <Constant Include="FileVersion"          Value="$(FileVersion)"          Condition="'$(FileVersion)' != ''" />
+      <Constant Include="InformationalVersion" Value="$(InformationalVersion)" Condition="'$(InformationalVersion)' != ''" />
+      <Constant Include="Version"              Value="$(Version)"              Condition="'$(Version)' != ''" />
+      <Constant Include="Product"              Value="$(Product)"              Condition="'$(Product)' != ''" />
+      <Constant Include="Company"              Value="$(Company)"              Condition="'$(Company)' != ''" />
+      <Constant Include="Copyright"            Value="$(Copyright)"            Condition="'$(Copyright)' != ''" />
+      <Constant Include="Description"          Value="$(Description)"          Condition="'$(Description)' != ''" />
+      <Constant Include="Configuration"        Value="$(Configuration)"        Condition="'$(Configuration)' != ''" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="GenerateBuildConstants"
           BeforeTargets="CoreCompile"
-          Condition="'@(Constant)' != '' or '$(EnableDefaultConstantItems)' == 'true'">
+          DependsOnTargets="PopulateBuildConstants">
 
     <PropertyGroup>
       <_BuildConstantsOutputPath>$(IntermediateOutputPath)$(BuildConstantsTypeName).g.cs</_BuildConstantsOutputPath>
@@ -34,18 +64,7 @@
       Namespace="$(RootNamespace)"
       TypeName="$(BuildConstantsTypeName)"
       OutputPath="$(_BuildConstantsOutputPath)"
-      Language="$(Language)"
-      EnableDefaultConstants="$(EnableDefaultConstantItems)"
-      DefaultAssemblyName="$(AssemblyName)"
-      DefaultAssemblyVersion="$(AssemblyVersion)"
-      DefaultFileVersion="$(FileVersion)"
-      DefaultInformationalVersion="$(InformationalVersion)"
-      DefaultVersion="$(Version)"
-      DefaultProduct="$(Product)"
-      DefaultCompany="$(Company)"
-      DefaultCopyright="$(Copyright)"
-      DefaultDescription="$(Description)"
-      DefaultConfiguration="$(Configuration)">
+      Language="$(Language)">
       <Output TaskParameter="GeneratedFilePath" PropertyName="_BuildConstantsGeneratedFile" />
     </GenerateBuildConstantsTask>
 

@@ -18,23 +18,4 @@
     <EnableDefaultConstantItems Condition="'$(EnableDefaultConstantItems)' == ''">true</EnableDefaultConstantItems>
   </PropertyGroup>
 
-  <!--
-    Default constants are defined unconditionally so that users can
-    selectively remove them with <Constant Remove="Copyright" /> etc.
-    The task itself respects $(EnableDefaultConstantItems) and will
-    ignore items carrying the IsDefault metadata when the property is false.
-  -->
-  <ItemGroup>
-    <Constant Include="AssemblyName" IsDefault="true" />
-    <Constant Include="AssemblyVersion" IsDefault="true" />
-    <Constant Include="FileVersion" IsDefault="true" />
-    <Constant Include="InformationalVersion" IsDefault="true" />
-    <Constant Include="Version" IsDefault="true" />
-    <Constant Include="Product" IsDefault="true" />
-    <Constant Include="Company" IsDefault="true" />
-    <Constant Include="Copyright" IsDefault="true" />
-    <Constant Include="Description" IsDefault="true" />
-    <Constant Include="Configuration" IsDefault="true" />
-  </ItemGroup>
-
 </Project>

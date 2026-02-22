@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -73,23 +74,6 @@ public class GenerateBuildConstantsTask : Task
     public string Language { get; set; } = "";
 
     /// <summary>
-    /// Whether to include the 10 default constants. Defaults to <c>true</c>.
-    /// </summary>
-    public string EnableDefaultConstants { get; set; } = "true";
-
-    // Default property values passed from MSBuild.
-    public string DefaultAssemblyName { get; set; } = "";
-    public string DefaultAssemblyVersion { get; set; } = "";
-    public string DefaultFileVersion { get; set; } = "";
-    public string DefaultInformationalVersion { get; set; } = "";
-    public string DefaultVersion { get; set; } = "";
-    public string DefaultProduct { get; set; } = "";
-    public string DefaultCompany { get; set; } = "";
-    public string DefaultCopyright { get; set; } = "";
-    public string DefaultDescription { get; set; } = "";
-    public string DefaultConfiguration { get; set; } = "";
-
-    /// <summary>
     /// Returns the full path of the generated file (same as <see cref="OutputPath"/>).
     /// </summary>
     [Output]
@@ -103,53 +87,23 @@ public class GenerateBuildConstantsTask : Task
             return false;
         }
 
-        var enableDefaults = string.Equals(EnableDefaultConstants, "true", StringComparison.OrdinalIgnoreCase);
-
-        // Build a dictionary for resolving default constant values from task properties.
-        var defaultValueMap = new Dictionary<string, string>(StringComparer.Ordinal)
-        {
-            ["AssemblyName"] = DefaultAssemblyName ?? "",
-            ["AssemblyVersion"] = DefaultAssemblyVersion ?? "",
-            ["FileVersion"] = DefaultFileVersion ?? "",
-            ["InformationalVersion"] = DefaultInformationalVersion ?? "",
-            ["Version"] = DefaultVersion ?? "",
-            ["Product"] = DefaultProduct ?? "",
-            ["Company"] = DefaultCompany ?? "",
-            ["Copyright"] = DefaultCopyright ?? "",
-            ["Description"] = DefaultDescription ?? "",
-            ["Configuration"] = DefaultConfiguration ?? "",
-        };
-
-        // Collect raw items with resolved values.
-        var rawItems = new List<(string Name, string Value, string Type, string Summary)>();
-
-        foreach (var item in Constants)
-        {
-            var name = item.ItemSpec;
-            var isDefault = string.Equals(item.GetMetadata("IsDefault"), "true", StringComparison.OrdinalIgnoreCase);
-
-            // Skip default items when defaults are disabled.
-            if (isDefault && !enableDefaults)
-                continue;
-
-            var value = item.GetMetadata("Value") ?? "";
-
-            // For default items with no explicit value, resolve from the MSBuild property.
-            if (isDefault && string.IsNullOrEmpty(value) && defaultValueMap.TryGetValue(name, out var resolved))
-                value = resolved;
-
-            rawItems.Add((name, value, item.GetMetadata("Type"), item.GetMetadata("Summary")));
-        }
-
         var entries = new List<ConstantEntry>();
         var nameSet = new HashSet<string>(StringComparer.Ordinal);
 
-        foreach (var (name, value, rawType, summary) in rawItems)
+        foreach (var (name, value, type, summary) in
+                 from item in Constants
+                 select (item.ItemSpec,
+                         Value: item.GetMetadata("Value") ?? "",
+                         item.GetMetadata("Type") switch
+                         {
+                             null or "" => "string",
+                             var t => t,
+                         },
+                         item.GetMetadata("Summary"))
+                 into item
+                 where !string.IsNullOrEmpty(item.Value)
+                 select item)
         {
-            // Skip constants with empty value silently.
-            if (string.IsNullOrEmpty(value))
-                continue;
-
             if (!ValidNamePattern.IsMatch(name))
             {
                 Log.LogError(
@@ -166,9 +120,6 @@ public class GenerateBuildConstantsTask : Task
                 Log.LogWarning("Duplicate constant \"{0}\". Only the first occurrence will be used.", name);
                 continue;
             }
-
-            // Resolve type (default to string).
-            var type = string.IsNullOrEmpty(rawType) ? "string" : rawType;
 
             if (!AllowedTypes.Contains(type))
             {

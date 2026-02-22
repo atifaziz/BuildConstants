@@ -150,9 +150,11 @@ public class IntegrationTests
     public async Task RemoveConstant()
     {
         var csproj = MinimalCsprojWith("""
-            <ItemGroup>
-              <Constant Remove="Copyright" />
-            </ItemGroup>
+            <Target Name="_ExcludeCopyright" AfterTargets="PopulateBuildConstants">
+              <ItemGroup>
+                <Constant Remove="Copyright" />
+              </ItemGroup>
+            </Target>
             """);
 
         var result = await ScenarioRunner.BuildAsync(csproj,
