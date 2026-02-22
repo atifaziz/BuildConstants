@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>14</LangVersion>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>..\dist</PackageOutputPath>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
+    <PolySharpIncludeGeneratedTypes>
+      System.Runtime.CompilerServices.IsExternalInit
+    </PolySharpIncludeGeneratedTypes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="18.3.3" PrivateAssets="all" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="18.3.3" PrivateAssets="all" ExcludeAssets="runtime">
+      <IncludeAssets>compile; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <PolySharpIncludeGeneratedTypes>
+      System.Runtime.CompilerServices.IsExternalInit
+    </PolySharpIncludeGeneratedTypes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="build\**" Pack="true" PackagePath="build\" />
+    <None Include="buildTransitive\**" Pack="true" PackagePath="buildTransitive\" />
+  </ItemGroup>
+
+</Project>

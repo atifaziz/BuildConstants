@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!--
+      Suppress analyzer rules not appropriate for test projects:
+        CA1515  Types can be made internal (xUnit needs public)
+        CA1707  Remove underscores from member names (test naming convention)
+        CA1711  Type name ends in 'Collection' (xUnit collection fixture pattern)
+        CA1810  Initialize static fields inline (complex init logic)
+        CA1307  Use StringComparison overload (Assert methods are fine)
+        CA2007  ConfigureAwait on awaited task (not needed in test code)
+    -->
+    <NoWarn>$(NoWarn);CA1515;CA1707;CA1711;CA1810;CA1307;CA2007</NoWarn>
+  </PropertyGroup>
+
+  <!-- Exclude scenario project outputs from this project's compilation. -->
+  <ItemGroup>
+    <Compile Remove="scenarios\**" />
+    <None Remove="scenarios\**" />
+    <Content Remove="scenarios\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Build ordering only; we don't reference the task assembly at compile-time. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BuildConstants.csproj"
+                      ReferenceOutputAssembly="false"
+                      Private="false" />
+  </ItemGroup>
+
+</Project>
