@@ -6,10 +6,6 @@
     <File Path="global.json" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/src/">
-    <Project Path="src/BuildConstants.csproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/BuildConstants.Tests/BuildConstants.Tests.csproj" />
-  </Folder>
+  <Project Path="src/BuildConstants.csproj" />
+  <Project Path="tests/Integration/IntegrationTests.csproj" />
 </Solution>

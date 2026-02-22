@@ -16,10 +16,10 @@
 
 using Xunit;
 
-namespace BuildConstants.Tests;
+namespace IntegrationTests;
 
 [Collection(ScenarioCollection.Name)]
-public class IntegrationTests
+public class ScenarioTests
 {
     const string MinimalCsproj = """
         <Project Sdk="Microsoft.NET.Sdk">

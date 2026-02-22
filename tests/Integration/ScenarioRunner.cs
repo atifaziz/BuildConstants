@@ -17,7 +17,7 @@
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace BuildConstants.Tests;
+namespace IntegrationTests;
 
 /// <summary>
 /// Result of running <c>dotnet build</c> on a scenario project.
@@ -61,11 +61,11 @@ static class ScenarioRunner
     static ScenarioRunner()
     {
         // Resolve paths relative to the test assembly location.
-        // The test assembly is at: tests/BuildConstants.Tests/bin/<config>/net10.0/
+        // The test assembly is at: tests/Integration/bin/<config>/net10.0/
         // Repo root is five levels up.
         var assemblyDir = AppContext.BaseDirectory;
         RepoRoot = Path.GetFullPath(Path.Combine(assemblyDir, "..", "..", "..", "..", ".."));
-        ScenariosDir = Path.Combine(RepoRoot, "tests", "BuildConstants.Tests", "scenarios");
+        ScenariosDir = Path.Combine(RepoRoot, "tests", "Integration", "scenarios");
 
         // The task output is at: src/bin/<config>/netstandard2.0/BuildConstants.dll
         TaskAssemblyPath = Path.Combine(RepoRoot, "src", "bin", Configuration, "netstandard2.0", "BuildConstants.dll");

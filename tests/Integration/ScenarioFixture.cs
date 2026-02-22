@@ -16,7 +16,7 @@
 
 using Xunit;
 
-namespace BuildConstants.Tests;
+namespace IntegrationTests;
 
 /// <summary>
 /// Collection fixture that wipes the scenarios directory once before the test run.
