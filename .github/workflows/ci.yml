@@ -82,6 +82,18 @@ jobs:
         }
         dotnet pack --no-build --configuration ${{ env.CONFIGURATION }} @packArgs "-p:PackageReleaseNotesFile=$releaseNotesFile"
 
+    - name: Validate Package
+      shell: pwsh
+      run: |
+        $PSNativeCommandUseErrorActionPreference = $true
+
+        Get-ChildItem -File -Filter *.nupkg dist |
+          Select-Object -ExpandProperty FullName |
+          ForEach-Object {
+            Write-Host "Validating package: $_"
+            dotnet meziantou.validate-nuget-package --excluded-rules 'IconMustBeSet,XmlDocumentationMustBePresent' $_
+          }
+
     - name: Upload NuGet packages
       uses: actions/upload-artifact@v4
       with:
