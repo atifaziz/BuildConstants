@@ -15,27 +15,27 @@
 <Project>
 
   <PropertyGroup>
-    <_BuildConstantsTaskAssembly Condition="'$(_BuildConstantsTaskAssembly)' == ''">$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\BuildConstants.dll</_BuildConstantsTaskAssembly>
+    <_BuildConstantsAssembly Condition="'$(_BuildConstantsAssembly)' == ''">$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\BuildConstants.dll</_BuildConstantsAssembly>
   </PropertyGroup>
 
   <UsingTask TaskName="BuildConstants.GenerateConstantsTask"
-             AssemblyFile="$(_BuildConstantsTaskAssembly)" />
+             AssemblyFile="$(_BuildConstantsAssembly)" />
 
   <!--
     Auto-populate Constant items from well-known MSBuild properties.
     These are appended after any user-defined Constant items.
     To exclude a specific default constant, add a target that runs
-    AfterTargets="PopulateBuildConstants" and removes the unwanted items:
+    AfterTargets="PopulateConstants" and removes the unwanted items:
 
-      <Target Name="_ExcludeBuildConstants" AfterTargets="PopulateBuildConstants">
+      <Target Name="_ExcludeConstants" AfterTargets="PopulateConstants">
         <ItemGroup>
           <Constant Remove="Configuration" />
         </ItemGroup>
       </Target>
   -->
 
-  <Target Name="PopulateBuildConstants"
-          BeforeTargets="GenerateBuildConstants"
+  <Target Name="PopulateConstants"
+          BeforeTargets="GenerateConstants"
           Condition="'$(EnableDefaultConstantItems)' != 'false'">
     <ItemGroup>
       <Constant Include="AssemblyName"         Value="$(AssemblyName)"         Condition="'$(AssemblyName)' != ''"         Summary="The simple name of the assembly, e.g. Acme.Widgets." />
@@ -51,25 +51,25 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="GenerateBuildConstants"
+  <Target Name="GenerateConstants"
           BeforeTargets="CoreCompile"
-          DependsOnTargets="PopulateBuildConstants">
+          DependsOnTargets="PopulateConstants">
 
     <PropertyGroup>
-      <_BuildConstantsOutputPath>$(IntermediateOutputPath)$(BuildConstantsTypeName).g.cs</_BuildConstantsOutputPath>
+      <_ConstantsOutputPath>$(IntermediateOutputPath)$(ConstantsTypeName).g.cs</_ConstantsOutputPath>
     </PropertyGroup>
 
     <GenerateConstantsTask
       Constants="@(Constant)"
       Namespace="$(RootNamespace)"
-      TypeName="$(BuildConstantsTypeName)"
-      OutputPath="$(_BuildConstantsOutputPath)"
+      TypeName="$(ConstantsTypeName)"
+      OutputPath="$(_ConstantsOutputPath)"
       Language="$(Language)">
-      <Output TaskParameter="GeneratedFilePath" PropertyName="_BuildConstantsGeneratedFile" />
+      <Output TaskParameter="GeneratedFilePath" PropertyName="_ConstantsGeneratedFile" />
     </GenerateConstantsTask>
 
-    <ItemGroup Condition="Exists('$(_BuildConstantsGeneratedFile)')">
-      <Compile Include="$(_BuildConstantsGeneratedFile)" />
+    <ItemGroup Condition="Exists('$(_ConstantsGeneratedFile)')">
+      <Compile Include="$(_ConstantsGeneratedFile)" />
     </ItemGroup>
 
   </Target>

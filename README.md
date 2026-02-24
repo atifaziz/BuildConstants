@@ -137,10 +137,10 @@ automatically encoded.
 ## Removing Constants
 
 Remove any default constant by adding a target that runs after
-`PopulateBuildConstants`:
+`PopulateConstants`:
 
 ```xml
-<Target Name="_ExcludeBuildConstants" AfterTargets="PopulateBuildConstants">
+<Target Name="_ExcludeConstants" AfterTargets="PopulateConstants">
   <ItemGroup>
     <Constant Remove="Copyright" />
     <Constant Remove="Description" />
@@ -152,11 +152,11 @@ Remove any default constant by adding a target that runs after
 ## Custom Class Name
 
 By default the generated class is called `BuildConstants`. Override it with the
-`BuildConstantsTypeName` property:
+`ConstantsTypeName` property:
 
 ```xml
 <PropertyGroup>
-  <BuildConstantsTypeName>AppInfo</BuildConstantsTypeName>
+  <ConstantsTypeName>AppInfo</ConstantsTypeName>
 </PropertyGroup>
 ```
 

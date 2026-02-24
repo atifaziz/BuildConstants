@@ -14,7 +14,7 @@
 <Project>
 
   <PropertyGroup>
-    <BuildConstantsTypeName Condition="'$(BuildConstantsTypeName)' == ''">BuildConstants</BuildConstantsTypeName>
+    <ConstantsTypeName Condition="'$(ConstantsTypeName)' == ''">BuildConstants</ConstantsTypeName>
     <EnableDefaultConstantItems Condition="'$(EnableDefaultConstantItems)' == ''">true</EnableDefaultConstantItems>
   </PropertyGroup>
 

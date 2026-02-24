@@ -152,7 +152,7 @@ public class ScenarioTests
     public async Task RemoveConstant()
     {
         var csproj = MinimalCsprojWith("""
-            <Target Name="_ExcludeCopyright" AfterTargets="PopulateBuildConstants">
+            <Target Name="_ExcludeCopyright" AfterTargets="PopulateConstants">
               <ItemGroup>
                 <Constant Remove="Copyright" />
               </ItemGroup>
@@ -174,7 +174,7 @@ public class ScenarioTests
     {
         var csproj = MinimalCsprojWith("""
             <PropertyGroup>
-              <BuildConstantsTypeName>AppInfo</BuildConstantsTypeName>
+              <ConstantsTypeName>AppInfo</ConstantsTypeName>
             </PropertyGroup>
             """);
 

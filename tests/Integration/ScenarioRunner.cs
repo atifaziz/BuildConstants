@@ -160,7 +160,7 @@ static class ScenarioRunner
 
     /// <summary>
     /// Injects the BuildConstants <c>.props</c> and <c>.targets</c> imports into a <c>.csproj</c>.
-    /// Also overrides <c>_BuildConstantsTaskAssembly</c> to point to the locally-built DLL.
+    /// Also overrides <c>_BuildConstantsAssembly</c> to point to the locally-built DLL.
     /// </summary>
     static string InjectBuildConstantsImports(string projectContent)
     {
@@ -172,7 +172,7 @@ static class ScenarioRunner
         var imports = $"""
               <Import Project="{propsPath}" />
               <PropertyGroup>
-                <_BuildConstantsTaskAssembly>{TaskAssemblyPath}</_BuildConstantsTaskAssembly>
+                <_BuildConstantsAssembly>{TaskAssemblyPath}</_BuildConstantsAssembly>
               </PropertyGroup>
 
             """;
