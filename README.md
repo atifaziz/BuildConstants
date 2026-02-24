@@ -1,21 +1,22 @@
-# BuildConstants
+# Build Constants
 
 An MSBuild task that generates a C# partial class with compile-time constants
-from your project file. Distributed as a NuGet package.
+from your project file.
 
 ## Motivation
 
-Starting with C# 10, string constants can be initialised with string
-interpolations and so the build constants can be used directly as interpolation
-expressions (instead of, e.g., having to read them dynamically at run-time via
-assembly attributes).
+Starting with C# 10, [string constants can be initialised with string
+interpolations][strconst] and so the build constants can be used directly as
+interpolation expressions (instead of, e.g., having to read them dynamically at
+run-time via assembly attributes).
+
+[strconst]: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-10.0/constant_interpolated_strings
 
 ```csharp
 // Before: dynamic attribute reading at run-time
-var version = Assembly
-    .GetExecutingAssembly()
-    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
-    .InformationalVersion;
+var version = Assembly.GetExecutingAssembly()
+                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()!
+                      .InformationalVersion;
 
 Console.WriteLine($"App v{version}");
 
@@ -41,12 +42,18 @@ Console.WriteLine($"App v{BuildConstants.InformationalVersion}");
 
    ```csharp
    Console.WriteLine($"{BuildConstants.Product} v{BuildConstants.Version}");
-   Console.WriteLine($"  built as {BuildConstants.Configuration}");
+   Console.WriteLine($"{BuildConstants.Copyright}");
    ```
 
-That's it. By default, ten common project properties are exposed as
-`public const string` fields in a partial class called `BuildConstants`,
-living in your project's root namespace.
+   including in _constants_ themselves:
+
+   ```csharp
+   const string ProductTitle = $"{Product} v{Version}";
+   ```
+
+That's it. By default, many [common project properties](#default-constants) are
+exposed as `public const string` fields in a partial class called
+`BuildConstants`, living in the project's root namespace.
 
 ## Default Constants
 
@@ -67,7 +74,7 @@ properties:
 | `Description`          | `$(Description)`           |
 | `Configuration`        | `$(Configuration)`         |
 
-Constants whose property value is empty at build time are silently omitted.
+Constants whose property value is empty at build-time are silently omitted.
 
 ## Custom Constants
 
@@ -139,6 +146,9 @@ Remove any default constant by adding a target that runs after
     <Constant Remove="Description" />
   </ItemGroup>
 </Target>
+
+```
+
 ## Custom Class Name
 
 By default the generated class is called `BuildConstants`. Override it with the
@@ -169,9 +179,8 @@ and define only your own:
 
 ## Validation Rules
 
-- **Constant names** must begin with an upper-case letter, followed by
-  upper- or lower-case letters or digits (regex: `^[A-Z][A-Za-z0-9]*$`).
-  Invalid names produce a build error.
+- **Constant names** must begin with an upper-case letter, followed by upper- or
+  lower-case letters or digits. Invalid names produce a build error.
 - **Empty values** are silently skipped (no constant is emitted).
 - **Duplicate names** produce a build warning; only the first occurrence is
   kept.
@@ -179,7 +188,3 @@ and define only your own:
   produces a build error.
 - The task **only supports C# projects**. Using it in an F# or VB project
   produces a build error.
-
-## License
-
-Apache License 2.0 — see [COPYING.txt](COPYING.txt).
