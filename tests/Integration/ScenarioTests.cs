@@ -14,6 +14,8 @@
 //
 #endregion
 
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Xunit;
 
 namespace IntegrationTests;
@@ -202,8 +204,17 @@ public class ScenarioTests
 
         Assert.True(result.Succeeded, result.Output);
         var generated = result.ReadGeneratedFile();
+        var summary =
+            XElement.Parse(
+                string.Join(null,
+                            from line in Regex.Split(generated, @"\r?\n")
+                            select line.Trim() into line
+                            where line.StartsWith("/// ", StringComparison.Ordinal)
+                            select line[4..]));
 
-        Assert.Contains("/// <summary>Uses &lt;angle brackets&gt; &amp; more</summary>", generated);
+        Assert.Empty(summary.Name.NamespaceName);
+        Assert.Equal("summary", summary.Name.LocalName);
+        Assert.Equal("Uses <angle brackets> & more", summary.Value);
     }
 
     [Fact]

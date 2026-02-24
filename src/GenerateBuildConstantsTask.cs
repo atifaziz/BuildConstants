@@ -167,7 +167,9 @@ public class GenerateBuildConstantsTask : Task
 
             if (!string.IsNullOrEmpty(entry.Summary))
             {
-                _ = sb.Append("    /// <summary>").Append(XmlEncode(entry.Summary)).AppendLine("</summary>");
+                _ = sb.AppendLine("    /// <summary>")
+                      .Append    ("    /// ").AppendLine(XmlEncode(entry.Summary))
+                      .AppendLine("    /// </summary>");
             }
 
             _ = sb.Append("    public const ").Append(entry.Type).Append(' ').Append(entry.Name).Append(" = ");
