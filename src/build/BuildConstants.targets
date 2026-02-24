@@ -38,16 +38,16 @@
           BeforeTargets="GenerateBuildConstants"
           Condition="'$(EnableDefaultConstantItems)' != 'false'">
     <ItemGroup>
-      <Constant Include="AssemblyName"         Value="$(AssemblyName)"         Condition="'$(AssemblyName)' != ''" />
-      <Constant Include="AssemblyVersion"      Value="$(AssemblyVersion)"      Condition="'$(AssemblyVersion)' != ''" />
-      <Constant Include="FileVersion"          Value="$(FileVersion)"          Condition="'$(FileVersion)' != ''" />
-      <Constant Include="InformationalVersion" Value="$(InformationalVersion)" Condition="'$(InformationalVersion)' != ''" />
-      <Constant Include="Version"              Value="$(Version)"              Condition="'$(Version)' != ''" />
-      <Constant Include="Product"              Value="$(Product)"              Condition="'$(Product)' != ''" />
-      <Constant Include="Company"              Value="$(Company)"              Condition="'$(Company)' != ''" />
-      <Constant Include="Copyright"            Value="$(Copyright)"            Condition="'$(Copyright)' != ''" />
-      <Constant Include="Description"          Value="$(Description)"          Condition="'$(Description)' != ''" />
-      <Constant Include="Configuration"        Value="$(Configuration)"        Condition="'$(Configuration)' != ''" />
+      <Constant Include="AssemblyName"         Value="$(AssemblyName)"         Condition="'$(AssemblyName)' != ''"         Summary="The simple name of the assembly, e.g. Acme.Widgets." />
+      <Constant Include="AssemblyVersion"      Value="$(AssemblyVersion)"      Condition="'$(AssemblyVersion)' != ''"      Summary="The version of the assembly, e.g. 1.0.0.0." />
+      <Constant Include="FileVersion"          Value="$(FileVersion)"          Condition="'$(FileVersion)' != ''"          Summary="The version number for the Win32 file version resource, e.g. 1.0.0.0." />
+      <Constant Include="InformationalVersion" Value="$(InformationalVersion)" Condition="'$(InformationalVersion)' != ''" Summary="Any additional version information for the assembly, e.g. 1.0.0-beta.1+abc123." />
+      <Constant Include="Version"              Value="$(Version)"              Condition="'$(Version)' != ''"              Summary="The version used for NuGet package and assembly versioning, e.g. 1.0.0-beta.1." />
+      <Constant Include="Product"              Value="$(Product)"              Condition="'$(Product)' != ''"              Summary="The product name, e.g. Acme Widgets." />
+      <Constant Include="Company"              Value="$(Company)"              Condition="'$(Company)' != ''"              Summary="The company name, e.g. Acme Corp." />
+      <Constant Include="Copyright"            Value="$(Copyright)"            Condition="'$(Copyright)' != ''"            Summary="The copyright notice, e.g. Copyright 2026 Acme Corp." />
+      <Constant Include="Description"          Value="$(Description)"          Condition="'$(Description)' != ''"          Summary="The text description of the assembly, e.g. A library for managing widgets." />
+      <Constant Include="Configuration"        Value="$(Configuration)"        Condition="'$(Configuration)' != ''"        Summary="The build configuration, e.g. Debug or Release." />
     </ItemGroup>
   </Target>
 
