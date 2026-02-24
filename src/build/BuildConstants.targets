@@ -18,7 +18,7 @@
     <_BuildConstantsTaskAssembly Condition="'$(_BuildConstantsTaskAssembly)' == ''">$(MSBuildThisFileDirectory)..\tasks\netstandard2.0\BuildConstants.dll</_BuildConstantsTaskAssembly>
   </PropertyGroup>
 
-  <UsingTask TaskName="BuildConstants.GenerateBuildConstantsTask"
+  <UsingTask TaskName="BuildConstants.GenerateConstantsTask"
              AssemblyFile="$(_BuildConstantsTaskAssembly)" />
 
   <!--
@@ -59,14 +59,14 @@
       <_BuildConstantsOutputPath>$(IntermediateOutputPath)$(BuildConstantsTypeName).g.cs</_BuildConstantsOutputPath>
     </PropertyGroup>
 
-    <GenerateBuildConstantsTask
+    <GenerateConstantsTask
       Constants="@(Constant)"
       Namespace="$(RootNamespace)"
       TypeName="$(BuildConstantsTypeName)"
       OutputPath="$(_BuildConstantsOutputPath)"
       Language="$(Language)">
       <Output TaskParameter="GeneratedFilePath" PropertyName="_BuildConstantsGeneratedFile" />
-    </GenerateBuildConstantsTask>
+    </GenerateConstantsTask>
 
     <ItemGroup Condition="Exists('$(_BuildConstantsGeneratedFile)')">
       <Compile Include="$(_BuildConstantsGeneratedFile)" />

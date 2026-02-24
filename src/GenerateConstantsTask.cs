@@ -30,7 +30,7 @@ namespace BuildConstants;
 /// MSBuild task that generates a C# partial class containing public constants
 /// from <c>&lt;Constant&gt;</c> items defined in the project file.
 /// </summary>
-public class GenerateBuildConstantsTask : Task
+public class GenerateConstantsTask : Task
 {
     static readonly Regex ValidNamePattern = new(@"^[A-Z][A-Za-z0-9]*$", RegexOptions.Compiled);
 
