@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>14</LangVersion>
     <Description>MSBuild task that generates compile-time constants from the project file.</Description>
