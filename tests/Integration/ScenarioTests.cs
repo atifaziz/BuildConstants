@@ -127,6 +127,27 @@ public class ScenarioTests
     }
 
     [Fact]
+    public async Task CustomIntConstant()
+    {
+        var csproj = MinimalCsprojWith("""
+            <PropertyGroup>
+              <EnableDefaultConstantItems>false</EnableDefaultConstantItems>
+            </PropertyGroup>
+            <ItemGroup>
+              <Constant Include="MaxRetries" Value="5" Type="int" />
+            </ItemGroup>
+            """);
+
+        var result = await ScenarioRunner.BuildAsync(csproj,
+            files: new() { ["Program.cs"] = MinimalProgram() });
+
+        Assert.True(result.Succeeded, result.Output);
+        var generated = result.ReadGeneratedFile();
+
+        Assert.Contains("public const int MaxRetries = 5;", generated);
+    }
+
+    [Fact]
     public async Task DisableDefaults()
     {
         var csproj = MinimalCsprojWith("""

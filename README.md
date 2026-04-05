@@ -94,13 +94,21 @@ public const string AppName = @"My Cool App";
 public const string LaunchYear = @"2026";
 ```
 
-## Bool Constants
+## Typed Constants
 
-Give a constant a `Type="bool"` to emit a `bool` instead of `string`:
+By default every constant is a `string`. Add `Type` metadata to emit a
+different C# type. The supported types are:
+
+| Type     | Value format                          |
+|----------|---------------------------------------|
+| `string` | Any text (default; `Type` can be omitted) |
+| `bool`   | `true` or `false`                     |
+| `int`    | Any valid C# `int` literal (e.g., `42`, `-1`, `0xFF`) |
 
 ```xml
 <ItemGroup>
-  <Constant Include="IsDebug" Value="true" Type="bool" />
+  <Constant Include="IsDebug"    Value="true" Type="bool" />
+  <Constant Include="MaxRetries" Value="5"    Type="int"  />
 </ItemGroup>
 ```
 
@@ -108,10 +116,11 @@ Generated output:
 
 ```csharp
 public const bool IsDebug = true;
+public const int MaxRetries = 5;
 ```
 
-The value is emitted verbatim, so it must be a valid C# `bool` literal
-(`true` or `false`).
+Non-string values are emitted verbatim without validation, so they must be valid
+C# literals for the chosen type otherwise the compiler will generate an error during compilation of the generated file.
 
 ## Doc Comments
 
@@ -184,7 +193,7 @@ and define only your own:
 - **Empty values** are silently skipped (no constant is emitted).
 - **Duplicate names** produce a build warning; only the first occurrence is
   kept.
-- **Allowed types** are `string` (default) and `bool`. Any other type
+- **Allowed types** are `string` (default), `bool`, and `int`. Any other type
   produces a build error.
 - The task **only supports C# projects**. Using it in an F# or VB project
   produces a build error.

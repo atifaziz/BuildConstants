@@ -38,6 +38,7 @@ public class GenerateConstantsTask : Task
     {
         "string",
         "bool",
+        "int",
     };
 
     /// <summary>
@@ -176,7 +177,7 @@ public class GenerateConstantsTask : Task
 
             _ = string.Equals(entry.Type, "string", StringComparison.Ordinal)
                 ? sb.Append("@\"").Append(entry.Value.Replace("\"", "\"\"")).Append('"')
-                : sb.Append(entry.Value); // bool and any future verbatim-value types.
+                : sb.Append(entry.Value); // bool, int, and any future verbatim-value types.
 
             _ = sb.AppendLine(";");
 
