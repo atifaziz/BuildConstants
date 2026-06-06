@@ -94,6 +94,18 @@ public const string AppName = @"My Cool App";
 public const string LaunchYear = @"2026";
 ```
 
+Since `Value` is a regular MSBuild metadata field, you can also use [property
+functions] to read it from a file:
+
+```xml
+<ItemGroup>
+  <Constant Include="License"
+            Value="$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\COPYING.txt'))" />
+</ItemGroup>
+```
+
+[property functions]: https://learn.microsoft.com/en-us/visualstudio/msbuild/property-functions
+
 ## Typed Constants
 
 By default every constant is a `string`. Add `Type` metadata to emit a
